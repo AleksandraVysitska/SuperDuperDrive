@@ -135,7 +135,7 @@
                     <!-- CREDENTIALS -->
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right"
-                                id="add-credential-button"
+                                id="addCred"
                                 onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
@@ -158,7 +158,9 @@
                                                 type="button"
                                                 class="btn btn-success edit-credential-button"
                                                 name="editCred">Edit</button>
-                                        <a th:href="@{/delete-credential/{id}(id=${credential.credentialId})}" class="btn btn-danger delete-credential-button">Delete</a>
+                                        <a th:href="@{/delete-credential/{id}(id=${credential.credentialId})}"
+                                           class="btn btn-danger delete-credential-button"
+                                            name="deleteCred">Delete</a>
                                     </td>
                                     <th th:text="${credential.url}" scope="row"></th>
                                     <td th:text="${credential.username}"></td>
@@ -168,7 +170,7 @@
                             </table>
                         </div>
 
-                        <!-- Credentials -->
+                        <!-- Credentials input-->
                         <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
