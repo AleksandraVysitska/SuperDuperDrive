@@ -6,6 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CredentialsController {
@@ -17,20 +18,27 @@ public class CredentialsController {
         this.userService = userService;
     }
     @PostMapping(value = "/add-credential")
-    public String addCredential(Authentication authentication, Credentials credential) {
+    public String addCredential(Authentication authentication,
+                                RedirectAttributes redirectAttributes,
+                                Credentials credential) {
         boolean result;
+        try {
+            if (credential.getCredentialId() == null) {
+                result = credentialService.create(credential, getUserId(authentication));
+            } else {
+                result = credentialService.update(credential, getUserId(authentication));
+            }
 
-        if (credential.getCredentialId() == null) {
-            result = credentialService.create(credential, getUserId(authentication));
-        } else {
-            result = credentialService.update(credential, getUserId(authentication));
-        }
-
-        if (!result) {
+            if (!result) {
+                redirectAttributes.addFlashAttribute("error", "Credential creation error");
+                return "redirect:/result?error";
+            }
+            redirectAttributes.addFlashAttribute("success", "Credential was successfully created");
+            return "redirect:/result?success";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Insertion error: " + e.getMessage().toString());
             return "redirect:/result?error";
         }
-
-        return "redirect:/result?success";
     }
 
     @GetMapping(value = "/delete-credential/{id}")

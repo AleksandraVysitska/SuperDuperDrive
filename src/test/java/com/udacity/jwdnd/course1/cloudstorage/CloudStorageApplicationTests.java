@@ -323,9 +323,11 @@ class CloudStorageApplicationTests {
 		}
 		wait.until(ExpectedConditions.elementToBeClickable(this.editElement)).click();
 		WebElement notetitle = driver.findElement(By.id("note-title"));
+		WebElement notedescription = driver.findElement(By.id("note-description"));
 		wait.until(ExpectedConditions.elementToBeClickable(notetitle));
 		notetitle.clear();
 		notetitle.sendKeys("new note title");
+		notedescription.sendKeys("new note description");
 		savechanges = driver.findElement(By.id("save-changes"));
 		savechanges.click();
 	}

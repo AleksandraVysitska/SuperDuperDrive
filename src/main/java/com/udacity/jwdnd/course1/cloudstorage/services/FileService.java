@@ -39,7 +39,6 @@ public class FileService {
             fileMapper.insert(f);
         } finally {
             is.close();
-            System.out.println(f);
         }
     }
 
@@ -54,5 +53,11 @@ public class FileService {
 
     public List<File> getFilesForUser(Integer userId) {
         return fileMapper.getAllFiles(userId);
+    }
+
+    public boolean checkFilename(String fileName, Integer userId) {
+
+        return ((fileMapper.getFileByName(fileName, userId) == null) ? true : false);
+
     }
 }

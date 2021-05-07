@@ -1,12 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
 
 public class Note {
 
     private Integer noteid;
     private String notetitle;
+    @Column(length = 1000)
     private String notedescription;
     private Integer userid;
 

@@ -36,12 +36,13 @@ public class SignupController {
         if (signupError == null) {
             int rowsAdded = userService.createUser(user);
             if (rowsAdded < 0) {
-                signupError = "There was an error signing you up. Please try again.";
+                signupError = "An error occurred. Please try again.";
             }
         }
 
         if (signupError == null) {
             model.addAttribute("signupSuccess", true);
+            return "login";
         } else {
             model.addAttribute("signupError", signupError);
         }

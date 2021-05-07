@@ -14,15 +14,12 @@
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>
             </div>
-            <div class="alert alert-success fill-parent" th:unless="${success}">
-                <h1 class="display-5">Success</h1>
-                <span>Your note was successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>
+            <div class="alert alert-danger fill-parent" th:if="${error}">
+                <h1 class="display-5">Error</h1>
+                <span th:text="${error}">Example Error Message</span>
+                <br />
+                <span>Click <a id="homeFromError" href="/home">here</a> to continue.</span>
             </div>
-            <div class="alert alert-success fill-parent" th:if="${success1}">
-                <h1 class="display-5">Success</h1>
-                <span>Your note was successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>
-            </div>
-        </div>
         </div>
     </body>
 </html>

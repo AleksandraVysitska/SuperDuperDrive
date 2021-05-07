@@ -45,15 +45,18 @@ public class HomeController {
 
     @GetMapping()
     public String homeView(Model model, Authentication authentication) throws Exception {
-        int userId = userService.getUser(authentication.getName()).getUserId();
-        files = fileService.getFilesForUser(userId);
-        notes=notesService.getAllNotes(userId);
-        credentials=credentialsService.getAllByUserId(Long.parseLong(userId+""));
-        model.addAttribute("files", files);
-        model.addAttribute("notes",notes);
-        model.addAttribute("credentials",credentials);
-        model.addAttribute("encryptionService",encryptionService);
-        return "home";
+
+        if(authentication.getName()!=null) {
+            int userId = userService.getUser(authentication.getName()).getUserId();
+            files = fileService.getFilesForUser(userId);
+            notes = notesService.getAllNotes(userId);
+            credentials = credentialsService.getAllByUserId(Long.parseLong(userId + ""));
+            model.addAttribute("files", files);
+            model.addAttribute("notes", notes);
+            model.addAttribute("credentials", credentials);
+            model.addAttribute("encryptionService", encryptionService);
+            return "home";
+        } else return"login";
     }
 
 

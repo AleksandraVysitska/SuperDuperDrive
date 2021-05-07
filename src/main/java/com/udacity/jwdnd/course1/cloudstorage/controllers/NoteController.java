@@ -1,14 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NotesService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class NoteController {
@@ -22,29 +21,54 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public String createOrUpdateNote(Authentication authentication, Note note) {
+    public String createOrUpdateNote(Authentication authentication,
+                                     @ModelAttribute Note note,
+                                     RedirectAttributes redirectAttributes
+                                     ) {
         boolean result;
+        try {
+            if (note.getNoteid() == 0) {
+                if (notesService.checkNote(note)){
+                    redirectAttributes.addFlashAttribute("error", "Note title or description already exists.");
+                    return "redirect:/result?error";
+                }
+                result = notesService.addNote(note, getUserId(authentication));
+            } else {
+                if (notesService.checkNote(note)){
+                    redirectAttributes.addFlashAttribute("error", "Note title or description already exists.");
+                    return "redirect:/result?error";
+                }
+                result = notesService.updateNote(note);
+            }
 
-        if (note.getNoteid()==0) {
-            result = notesService.addNote(note, getUserId(authentication));
-        } else {
-            result = notesService.updateNote(note);
-        }
-        if (!result) {
+            if (!result) {
+                redirectAttributes.addFlashAttribute("error", "Note creation error");
+                return "redirect:/result?error";
+            }
+            redirectAttributes.addFlashAttribute("success", "Note was successfully created");
+
+
+            return "redirect:/result?success";
+        } catch(Exception e){
+            redirectAttributes.addFlashAttribute("error", "Insertion error: " + e.getCause().toString());
             return "redirect:/result?error";
         }
 
-        return "redirect:/result?success";
     }
 
 
 
+
     @GetMapping("/notes/delete")
-    public String deleteNote(@RequestParam("id") int noteid) {
+    public String deleteNote(@RequestParam("id") Integer noteid,  RedirectAttributes redirectAttributes) {
         if (noteid > 0) {
             notesService.deleteNote(noteid);
+            redirectAttributes.addFlashAttribute("success", "Note was successfully deleted");
+
             return "redirect:/result?success";
         }
+        redirectAttributes.addFlashAttribute("error", "Note deletion error");
+
         return "redirect:/result?error";
     }
 
@@ -54,17 +78,4 @@ public class NoteController {
         return user.getUserId();
     }
 
-    private Note convertNote(NoteForm note, Authentication authentication) {
-        Note n = new Note();
-        if (note.getNoteid()!=null && !note.getNoteid().isBlank()){
-            n.setNoteid(Integer.parseInt(note.getNoteid().toString()));
-            n.setUserid(note.getUserid());
-        } else {
-            n.setUserid(getUserId(authentication));
-        }
-        n.setNotetitle(note.getNotetitle());
-        n.setNotedescription(note.getNotedescription());
-
-        return n;
-    }
 }

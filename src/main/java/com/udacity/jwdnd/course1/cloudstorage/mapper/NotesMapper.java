@@ -27,4 +27,10 @@ public interface NotesMapper {
 
     @Update("UPDATE NOTES SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
     public int updateNote(Note note);
+
+    @Select("SELECT * FROM NOTES WHERE notetitle = #{notetitle}")
+    public String findTitle(String notetitle);
+
+    @Select("SELECT * FROM NOTES WHERE notedescription = #{notedescription}")
+    public String findDescription(String notedescription);
 }

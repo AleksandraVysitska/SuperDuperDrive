@@ -41,4 +41,14 @@ public class NotesService {
         notesMapper.deleteNote(noteid);
     }
 
+    public boolean checkNote(Note note){
+        String title = notesMapper.findTitle(note.getNotetitle());
+        String description = notesMapper.findDescription(note.getNotedescription());
+
+        if (title!=null|| description!=null) return true;
+
+        return false;
+    }
+
+
 }
